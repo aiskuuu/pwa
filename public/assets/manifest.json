@@ -1,7 +1,7 @@
 {
   "name": "Inventori by Rizky",
   "short_name": "Rizky APP",
-  "start_url": "./wellcome.html",
+  "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
