@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="/assets/manifest.json">
+<meta name="theme-color" content="#1d4ed8">
+
+  <title>Konfirmasi Data</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
+
+  <div class="w-full max-w-3xl bg-white shadow-lg rounded-xl p-6 md:p-10">
+    <h1 class="text-3xl font-bold text-center mb-6 text-blue-700">Konfirmasi Data <span id="form-title"></span></h1>
+    
+    <div id="preview" class="space-y-6">
+      <!-- Preview data muncul di sini -->
+    </div>
+
+    <div class="flex justify-between mt-8">
+      <button id="btn-kembali" class="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">Kembali</button>
+      <button id="submitBtn" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Kirim ke Sheet</button>
+    </div>
+  </div>
+ <script src="/js/config.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const tipe = urlParams.get("tipe") || "masuk";
+    document.getElementById("form-title").textContent = tipe === "keluar" ? "Keluar" : "Masuk";
+
+    const data = JSON.parse(localStorage.getItem("dataForm"));
+    const preview = document.getElementById("preview");
+   const user = JSON.parse(localStorage.getItem("user"));
+ // Ambil namaUser dari localStorage
+
+    if (!data || !data.tanggal || !data.bahan || data.bahan.length === 0) {
+      preview.innerHTML = `<p class="text-red-600 font-semibold">Data tidak ditemukan atau tidak lengkap.</p>`;
+      document.getElementById("submitBtn").disabled = true;
+    } else {
+      const listHTML = data.bahan.map(item => `
+        <div class="flex justify-between border-b pb-2">
+          <span>${item.nama}</span>
+          <span>${item.jumlah}</span>
+        </div>
+      `).join("");
+
+      preview.innerHTML = `
+        <div>
+          <p class="font-semibold text-gray-700 mb-2">Tanggal:</p>
+          <p class="text-lg text-gray-900">${data.tanggal}</p>
+        </div>
+        <div>
+          <p class="font-semibold text-gray-700 mb-2">Nama Akun:</p>
+          <p class="text-lg text-gray-900">${user?.nama  || 'Tidak diketahui'}</p>
+        </div>
+        <div>
+          <p class="font-semibold text-gray-700 mb-2">Daftar Bahan:</p>
+          <div class="border rounded-lg p-4 bg-gray-50 space-y-2">
+            ${listHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    // Tombol kembali
+    document.getElementById("btn-kembali").addEventListener("click", function () {
+      const konfirmasi = confirm("Data akan terhapus saat kembali ke form.\nSilakan input ulang jika lanjut.");
+      if (konfirmasi) {
+        localStorage.removeItem("dataForm");
+        window.location.href = `form.html?tipe=${tipe}`;
+      }
+    });
+
+    // Tombol kirim
+    document.getElementById("submitBtn").addEventListener("click", async () => {
+      document.getElementById("submitBtn").textContent = "Mengirim...";
+      document.getElementById("submitBtn").disabled = true;
+
+    const payload = {
+  tanggal: data.tanggal,
+  bahan: data.bahan,
+  tipe: tipe,
+  user: {
+    nama: data.kodeAkses,        // dari localStorage
+    kode_akses: data.kodeAkses   // bisa sama
+  }
+};
+
+
+      try {
+         const response = await fetch(`${BASE_API_URL}/submit`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+       if (result.success) {
+  localStorage.removeItem("dataForm");
+
+  const pilihan = confirm("✅ Data berhasil dikirim!\n\nKlik OK untuk input lagi.\nKlik Batal untuk logout.");
+
+  if (pilihan) {
+    // Input lagi (kembali ke form)
+    window.location.href = "wellcome.html";
+  } else {
+    // Logout (hapus user dan kembali ke index)
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+  }
+}
+ else {
+          alert("❌ Gagal mengirim data.");
+        }
+
+      } catch (error) {
+        console.error(error);
+        alert("⚠️ Terjadi kesalahan saat mengirim data.");
+      } finally {
+        document.getElementById("submitBtn").textContent = "Kirim ke Sheet";
+        document.getElementById("submitBtn").disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

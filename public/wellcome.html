@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="manifest" href="/assets/manifest.json">
+<meta name="theme-color" content="#1d4ed8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('assets/bg.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+    }
+    .bg-overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center">
+
+  <div class="bg-overlay p-6 rounded-xl w-full max-w-sm text-center mt-12 mx-4 text-white">
+    
+    <!-- Logo -->
+    <div class="mb-6">
+      <img src="assets/logo1.png" alt="Logo" class="mx-auto h-14">
+    </div>
+
+    <!-- Sapaan -->
+    <h2 id="sapaan" class="text-xl font-semibold mb-2">Halo!</h2>
+    <p class="text-sm mb-6 text-gray-200">Silakan pilih jenis input data:</p>
+
+    <!-- Tombol Pilihan -->
+    <div class="flex flex-col gap-4 mb-4">
+      <a href="form.html?tipe=masuk" class="bg-blue-500 hover:bg-blue-600 py-2 rounded-full font-medium text-white">Barang Masuk</a>
+      <a href="form.html?tipe=keluar" class="bg-blue-500 hover:bg-blue-600 py-2 rounded-full font-medium text-white">Barang Keluar</a>
+    </div>
+
+    <!-- Tombol Logout (opsional) -->
+    <button onclick="logout()" class="text-sm text-gray-300 hover:underline">Keluar</button>
+  </div>
+
+  <!-- Script Ambil Nama User -->
+  <script>
+   const user = JSON.parse(localStorage.getItem("user"));
+if (user && user.nama) {
+  document.getElementById("sapaan").textContent = `Halo, ${user.nama}!`;
+} else {
+  // Redirect ke login kalau tidak ada data user
+  window.location.href = "index.html";
+}
+
+
+   function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "index.html";
+}
+
+  </script>
+</body>
+</html>

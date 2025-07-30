@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="/assets/manifest.json">
+<meta name="theme-color" content="#1d4ed8">
+
+  <title>Form Input Barang</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet" />
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-white min-h-screen flex items-center justify-center px-4">
+
+  <div class="w-full max-w-3xl bg-white shadow-lg rounded-xl p-6 md:p-10">
+    <h1 class="text-3xl font-bold text-center mb-8 text-blue-700">
+      Form Barang <span id="form-title"></span>
+    </h1>
+    
+    <form id="barang-form" class="space-y-6">
+      <!-- Tanggal -->
+      <div>
+        <label class="block mb-1 font-semibold text-gray-700">Tanggal</label>
+        <input type="date" name="tanggal" class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-300" required />
+      </div>
+
+      <!-- Bahan -->
+      <div id="bahan-container">
+        <div class="bahan-group grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 relative">
+          <div>
+            <label class="block mb-1 font-semibold text-gray-700">Bahan</label>
+            <select class="bahan-select w-full px-4 py-2 border border-gray-300 rounded-lg" required></select>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold text-gray-700">Jumlah</label>
+            <input type="number" class="jumlah-input w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+          </div>
+          <button type="button" class="hapus-bahan absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center shadow hover:bg-red-600">
+            &times;
+          </button>
+        </div>
+      </div>
+
+      <!-- Tombol -->
+      <div class="flex items-center gap-4 flex-wrap">
+        <button type="button" id="tambah-bahan" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">+ Tambah Bahan</button>
+        <button type="button" id="hapus-semua" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">Hapus</button>
+        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Kirim</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+  <script src="js/main.js" defer></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const tipe = urlParams.get("tipe") || "masuk";
+    document.getElementById("form-title").textContent = tipe === "keluar" ? "Keluar" : "Masuk";
+
+    // Fungsi hapus satu baris bahan
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.contains("hapus-bahan")) {
+        const semuaGroup = document.querySelectorAll("#bahan-container .bahan-group");
+        if (semuaGroup.length > 1) {
+          e.target.closest(".bahan-group").remove();
+        } else {
+          alert("Minimal satu baris bahan harus ada.");
+        }
+      }
+    });
+
+    // Fungsi hapus semua baris kecuali pertama
+    document.getElementById("hapus-semua").addEventListener("click", () => {
+      const semuaGroup = document.querySelectorAll("#bahan-container .bahan-group");
+      semuaGroup.forEach((group, index) => {
+        if (index > 0) group.remove(); // sisakan hanya baris pertama
+      });
+    });
+  </script>
+  
+</body>
+<script>
+document.getElementById("barang-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const tanggal = document.querySelector('input[name="tanggal"]').value;
+  const bahanSelects = document.querySelectorAll(".bahan-select");
+  const jumlahInputs = document.querySelectorAll(".jumlah-input");
+
+  const daftarBahan = [];
+
+  for (let i = 0; i < bahanSelects.length; i++) {
+    const bahan = bahanSelects[i].value;
+    const jumlah = jumlahInputs[i].value;
+
+    if (bahan && jumlah) {
+      daftarBahan.push({ bahan, jumlah });
+    }
+  }
+
+  // Ambil nama user dari localStorage
+  const kodeAkses = localStorage.getItem("user");
+
+  // Validasi jika belum login
+  if (!kodeAkses) {
+    alert("Akses tidak dikenali. Silakan login ulang.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  const dataForm = {
+    tanggal,
+    kodeAkses,
+    tipe,
+    user,
+    bahan: daftarBahan
+  };
+
+  localStorage.setItem("dataForm", JSON.stringify(dataForm));
+  window.location.href = "confirm.html";
+});
+</script>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="/assets/manifest.json">
+<meta name="theme-color" content="#1d4ed8">
+
+  <title>Login Inventori</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('assets/bg.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+    }
+    .bg-overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center">
+
+  <div class="bg-overlay p-6 rounded-xl w-full max-w-sm text-white text-center mt-12 mx-4">
+    
+    <!-- Slideshow Logo -->
+    <div class="mb-4">
+      <img id="logoSlide" src="assets/logo1.png" alt="Logo" class="mx-auto h-16 transition-all duration-500">
+    </div>
+
+    <!-- Judul -->
+    <h1 class="text-2xl font-bold mb-6 tracking-wide text-white">LOGIN</h1>
+
+    <!-- Form Login -->
+    <form id="loginForm">
+      <div class="text-left mb-6">
+        <label class="block text-sm mb-1 text-white">Kode Akses</label>
+        <input type="text" id="kodeAkses" class="w-full px-4 py-2 rounded bg-gray-100 text-black focus:outline-none" placeholder="Masukkan kode akses" required />
+      </div>
+
+      <!-- Pesan Error -->
+      <p id="pesanError" class="text-red-400 text-sm mb-4 hidden">Kode akses salah. Coba lagi.</p>
+
+      <!-- Tombol Masuk -->
+      <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-full font-semibold">Masuk</button>
+    </form>
+  </div>
+
+  <!-- Slideshow Logo Script -->
+  <script src="js/main.js"></script>
+  <script src="/js/config.js"></script>
+  <!-- Script Login (Fetch ke Backend) -->
+  <script>
+  document.getElementById("loginForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const kode = document.getElementById("kodeAkses").value.trim();
+
+    try {
+      const res = await fetch(`${BASE_API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kode })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        // Simpan sebagai objek lengkap ke localStorage
+        localStorage.setItem("user", JSON.stringify({
+          nama: data.nama,
+          kode_akses: kode
+        }));
+        window.location.href = "wellcome.html";
+      } else {
+        document.getElementById("pesanError").classList.remove("hidden");
+        document.getElementById("pesanError").textContent = "Kode akses salah. Coba lagi.";
+      }
+    } catch (err) {
+      console.error("Koneksi gagal:", err);
+      document.getElementById("pesanError").textContent = "Koneksi ke server gagal.";
+      document.getElementById("pesanError").classList.remove("hidden");
+    }
+  });
+  
+  </script>
+  <script src="/js/pwa.js"></script>
+
+
+
+</body>
+</html>
