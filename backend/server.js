@@ -15,10 +15,11 @@ const path = require('path');
 // STATIC: arahkan ke folder public (bukan pwa-input lagi)
 app.use(express.static(path.join(__dirname, '../public')));
 
-
+const credentials = 
+  JSON.parse(process.env.GOOGLE_CREDENTIALS);
 // Setup Google Sheets API
 const auth = new google.auth.GoogleAuth({
-  keyFile: path.join(__dirname, 'credentials.json'),
+  credentials:credentials,
  // File dari Google Cloud Console
   scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
