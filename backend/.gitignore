@@ -1,0 +1,26 @@
+# ⛔ Jangan upload dependencies
+node_modules
+
+# ⛔ Jangan upload kredensial
+backend/credentials.json
+.env
+
+# ⛔ Jangan upload log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ⛔ File cache & build
+.cache
+dist
+build
+
+# ⛔ MacOS
+.DS_Store
+
+# ⛔ Folder editor (opsional)
+.vscode
+.idea
+
+# ⛔ Service Worker cache bawaan browser (kalau kamu pernah test)
+service-worker.js.map
