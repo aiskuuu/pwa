@@ -15,7 +15,7 @@ const sheets = google.sheets({ version: 'v4', auth });
 
 async function appendToSheet(data) {
   const spreadsheetId = '1ScGD42LkdfT9i5NHde5jbcNss2seTppYUiZ8T8_mQfg'; // ← ganti ini
-  const range = 'INPUT!B:E'; // ganti jika nama sheet-nya beda
+  const range = 'INPUT!B:G'; // ganti jika nama sheet-nya beda
 
   try {
     const response = await sheets.spreadsheets.values.append({
