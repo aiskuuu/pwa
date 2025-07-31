@@ -26,7 +26,7 @@ if (halamanButuhLogin.includes(currentPage)) {
       if (!kode) return alert("Masukkan kode akses!");
 
       try {
-        const response = await fetch('${BASE_API_URL}/api/login', {
+        const response = await fetch(`${BASE_API_URL}/api/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ kode_akses: kode })
