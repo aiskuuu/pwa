@@ -2,8 +2,8 @@
 const mysql = require('mysql2');
 
 const connection = mysql.createConnection({
-  host: 'dirgantara.arenhost.com',
-  port: 2083, // <- WAJIB ditambahkan karena defaultnya 3306
+  host: '195.88.211.226', 
+  port: 3306, // <- WAJIB ditambahkan karena defaultnya 3306
   user: 'rosttoin_rizky',
   password: 'Rizkyaisyah1997', // jaga kerahasiaannya nanti ya
   database: 'rizky' // pastikan ini nama database kamu
