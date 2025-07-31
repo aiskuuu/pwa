@@ -1,7 +1,7 @@
 // db.js
 const mysql = require('mysql2');
 
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
   host: '195.88.211.226', 
   port: 3306, // <- WAJIB ditambahkan karena defaultnya 3306
   user: 'rosttoin_rizky',
