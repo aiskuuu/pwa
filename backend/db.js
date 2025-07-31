@@ -2,7 +2,7 @@
 const mysql = require('mysql2');
 
 const connection = mysql.createConnection({
-  host: 'rosttoinventory.my.id',
+  host: 'dirgantara.arenhost.com',
   user: 'rosttoin_rizky',
   password: 'Rizkyaisyah1997',       // sesuaikan dengan password MySQL kamu
   database: 'rizky' // ganti dengan nama database kamu
