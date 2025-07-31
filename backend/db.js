@@ -2,19 +2,16 @@
 const mysql = require('mysql2');
 
 const pool = mysql.createPool({
-  host: '195.88.211.226', 
-  port: 3306, // <- WAJIB ditambahkan karena defaultnya 3306
+  host: '195.88.211.226',
+  port: 3306,
   user: 'rosttoin_rizky',
-  password: 'Rizkyaisyah1997', // jaga kerahasiaannya nanti ya
-  database: 'rosttoin_rizky' // pastikan ini nama database 
+  password: 'Rizkyaisyah1997', // jaga kerahasiaannya
+  database: 'rosttoin_rizky',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-connection.connect(err => {
-  if (err) {
-    console.error('Koneksi ke database gagal:', err);
-  } else {
-    console.log('Terhubung ke database.');
-  }
-});
+// Tidak perlu pool.connect()
 
 module.exports = pool;
